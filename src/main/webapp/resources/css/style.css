@@ -1,0 +1,10 @@
+
+.ui-message-error{
+	color: red;
+	background: none;
+	border: none;
+}
+
+#employeeForm{
+	margin-bottom: 10px;
+}

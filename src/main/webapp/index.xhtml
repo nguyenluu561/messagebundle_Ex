@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view locale="#{employeeBean.locale}" >
+	<h:head>
+		<title><h:outputText value="#{cpt['label.page']}" /></title>
+	</h:head>
+	<h:body>
+
+		<h:outputStylesheet library="css" name="style.css" />
+		<h:form id="employeeForm">
+			<p:panel header="#{cpt['label.form']}">
+				<h:panelGrid columns="3" cellpadding="5">
+					<h:outputLabel value="#{cpt['label.firstname']}" />
+					<p:inputText id="firstName" required="true" size="20"
+						value="#{employeeBean.selectedEmployee.firstName}"
+						label="#{cpt['label.firstname']}">
+						<f:validateLength for="firstName" minimum="3" maximum="20" />
+					</p:inputText>
+					<p:message for="firstName" display="text" />
+
+
+					<h:outputLabel value="#{cpt['label.lastname']}" />
+					<p:inputText id="lastName" required="true" size="20"
+						value="#{employeeBean.selectedEmployee.lastName}"
+						label="#{cpt['label.lastname']}"></p:inputText>
+					<p:message for="lastName" display="text" />
+
+					<h:outputLabel value="#{cpt['label.gender']}" />
+					<h:selectOneRadio id="gender" required="true"
+						value="#{employeeBean.selectedEmployee.gender}"
+						label="#{cpt['label.gender']}">
+						<f:selectItem itemLabel="#{cpt['label.gender.male']}"
+							itemValue="male" />
+						<f:selectItem itemLabel="#{cpt['label.gender.female']}"
+							itemValue="female" />
+						<f:selectItem itemLabel="#{cpt['label.gender.undefined']}"
+							itemValue="undefine" />
+					</h:selectOneRadio>
+					<p:message for="gender" display="text" />
+
+					<h:outputLabel value="#{cpt['label.email']}" />
+					<p:inputText id="email" required="true"
+						label="#{cpt['label.email']}" size="20"
+						value="#{employeeBean.selectedEmployee.email}">
+						<f:validateRegex pattern="#{regex.emailRegex}" />
+					</p:inputText>
+					<p:message for="email" display="text" />
+
+					<h:outputLabel value="#{cpt['label.department']}" />
+					<p:selectOneMenu id="department"
+						value="#{employeeBean.selectedDept.deptId}">
+						<f:selectItems value="#{employeeBean.listAllDept}" var="dept"
+							itemValue="#{dept.deptId}" itemLabel="#{dept.deptName}" />
+					</p:selectOneMenu>
+					<p:message for="department" />
+
+					<p:commandButton value="#{cpt['btn.add']}"
+						action="#{employeeBean.addEmployee()}"
+						rendered="#{employeeBean.createEmployee}" update="employeeForm" />
+					<p:commandButton value="#{cpt['btn.update']}"
+						action="#{employeeBean.editEmployee()}"
+						rendered="#{employeeBean.updateEmployee}" update="employeeForm" />
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<h:form>
+			<p:dataTable id="employeeData"
+				value="#{employeeBean.listAllEmployees}" var="employee">
+				<p:column headerText="#{cpt['table.empId']}" sortBy="#{employee.id}">
+					<h:outputText value="#{employee.id}" />
+				</p:column>
+				<p:column headerText="#{cpt['label.firstname']}">
+					<h:outputText value="#{employee.firstName}" />
+				</p:column>
+				<p:column headerText="#{cpt['label.lastname']}">
+					<h:outputLabel value="#{employee.lastName}" />
+				</p:column>
+				<p:column headerText="#{cpt['label.email']}">
+					<h:outputLabel value="#{employee.email}" />
+				</p:column>
+
+				<p:column headerText="#{cpt['label.department']}">
+					<h:outputLabel value="#{employee.department.deptName}" />
+				</p:column>
+
+				<p:column headerText="#{cpt['table.delete']}">
+					<p:commandLink value="#{cpt['table.delete']}"
+						action="#{employeeBean.deleteEmployee(employee)}"
+						onclick="if(!confirm('#{cpt['confirm.delete']}')){return false;} ">
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{cpt['table.edit']}">
+					<p:commandLink value="#{cpt['table.edit']}"
+						action="#{employeeBean.selectEmployeeForEdit(employee)}"
+						update="employeeForm" />
+				</p:column>
+			</p:dataTable>
+
+			<p:commandButton value="#{cpt['label.english']}"
+				action="#{employeeBean.seleteEnglish}" update="@all"
+				rendered="#{!employeeBean.english}" />
+			<p:commandButton value="#{cpt['label.german']}"
+				action="#{employeeBean.seleteGerman}" update="@all"
+				rendered="#{!employeeBean.german}" />
+		</h:form>
+	</h:body>
+</f:view>
+</html>
